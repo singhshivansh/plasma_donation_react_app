@@ -1,5 +1,5 @@
-import react from 'react';
-import Navbad from './Navbar';
+import React from 'react';
+import Navbar from './Navbar';
 
 const Home = ()=>{
     return(
