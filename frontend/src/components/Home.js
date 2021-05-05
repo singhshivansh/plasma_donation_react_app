@@ -1,15 +1,18 @@
 import React, {useState} from 'react';
 import Navbar from './Navbar';
 
-const Home = ()=>{
-    const [count, setcount] = useState(0);
+const Home = () => {
+
+    const [count, setCount] = useState(0);
     return(
         <>
-            <Navbar />
-            <h2>Count is {count}</h2>
-            <button onClick={setCount = ()=>{count+1}}>Click Me</button>
+            <Navbar/>
+            <h1>This is Home</h1>
+            <h3>This is {count}</h3>
+            <button onClick={()=>{setCount(count+3)}}>Click</button>
+
         </>
     )
-}
+};
 
 export default Home;

@@ -1,5 +1,5 @@
 import react from 'react';
-import {Route, Switch, Link} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 
 const Navbar = ()=>{
@@ -23,8 +23,8 @@ const Navbar = ()=>{
             </div>
 
             <div>
-                <button className="btn btn-light mx-2">Login</button>
-                <button className="btn btn-light mx-2">Register</button>
+                <Link className="btn btn-light mx-2" to="/login">Login</Link>
+                <Link className="btn btn-light mx-2" to="/register" >Register</Link>
             </div>
             </nav>
         </>
