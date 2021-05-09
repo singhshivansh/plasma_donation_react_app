@@ -4,6 +4,12 @@ from django.contrib.auth.models import User
 import serpy
 # Create your models here.
 class PlasmaBank(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    name = models.CharField(max_length=20)
+    city = models.CharField(max_length=20)
+
+class Hospital(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=20)
     city = models.CharField(max_length=20)
 

@@ -2,10 +2,14 @@ import React from 'react';
 import Navbar from '../Navbar';
 
 const Login = () => {
+    function formSubmit(){
+        
+    }
+
     return (
         <div>
             <Navbar/>
-            <form action="">
+            <form action="" onSubmit="return formSubmit()">
                 <input type="text" placeholder="Enter Username"/>
                 <input type="password" placeholder="Enter Password"/>
                 <button type="submit">Submit</button>
@@ -15,4 +19,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default Login;

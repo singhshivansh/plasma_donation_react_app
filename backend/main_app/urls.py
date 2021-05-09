@@ -4,5 +4,7 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    path('', views.Home.as_view(), name="home")
+    path('', views.Home.as_view(), name="home"),
+    #APIs
+    path('register', views.register, name="register"),
 ]
