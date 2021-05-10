@@ -3,8 +3,14 @@ from django.urls import path, include
 
 from . import views
 
+from rest_framework import routers
+from rest_framework.authtoken.views import ObtainAuthToken
+
+router = routers.DefaultRouter()
+router.register('users', views.UserViewSet)
+
 urlpatterns = [
-    path('', views.Home.as_view(), name="home"),
+    path('', include(router.urls)),
+    path('auth/', ObtainAuthToken.as_view())
     #APIs
-    path('register', views.register, name="register"),
 ]

@@ -11,8 +11,20 @@ import json
 #importing models
 from .models import PlasmaBank, PlasmaBankSerializer, Hospital
 
+from rest_framework import viewsets
+
+# importing the serializers
+from .serializers import UserSerializer
+
 from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
+
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
 
 class Home(View):
     def get(self, request, *args, **kwargs):
@@ -45,3 +57,4 @@ def register(request):
             return JsonResponse({"error" : msg})
     msg = {"data" : msg}
     return JsonResponse(msg)
+
