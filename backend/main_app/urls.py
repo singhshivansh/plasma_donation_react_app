@@ -8,9 +8,11 @@ from rest_framework.authtoken.views import ObtainAuthToken
 
 router = routers.DefaultRouter()
 router.register('users', views.UserViewSet)
+# router.register('donors', views.DonorViewSet.as_view())
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('auth/', ObtainAuthToken.as_view())
+    path('auth/', ObtainAuthToken.as_view()),
+    path('donors/', views.DonorView.as_view())
     #APIs
 ]

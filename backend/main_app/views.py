@@ -8,13 +8,19 @@ from django.views import View
 from django.http import JsonResponse
 
 import json
-#importing models
-from .models import PlasmaBank, PlasmaBankSerializer, Hospital
 
+# importing from rest framework
 from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework import permissions, authentication
+
+#importing models
+from .models import PlasmaBank, PlasmaBankSerializer, Hospital, Donor
+
 
 # importing the serializers
-from .serializers import UserSerializer
+from .serializers import UserSerializer, DonorSerializer
 
 from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
@@ -25,6 +31,14 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+class DonorView(APIView):
+    authentication_classes  = [authentication.TokenAuthentication]
+    permission_classes      = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        donors = Donor.objects.all()
+        donors = DonorSerializer(donors, many=True).data
+        return Response(donors)
 
 class Home(View):
     def get(self, request, *args, **kwargs):
