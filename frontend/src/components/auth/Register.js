@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import Navbar from '../Navbar';
 import axios from 'axios';
+import { FormControl, TextField, Button } from '@material-ui/core';
+
 
 function Register() {
 
@@ -33,20 +34,22 @@ function Register() {
 
     return (
         <>
-            <Navbar />
             <div className="container my-5" >
                 <div>
-                    <h4>Register Form</h4>
+                    <h3>Register Form</h3>
                 </div>
-               <div className="container col-4">
-                <div>
-                <input type="text" name="username" value={credential.username} onChange={inputHandler} className="form-control  my-2 " placeholder="Enter Username" />
-                </div>
-                <input type="text" name="email" value={credential.email} onChange={inputHandler} className="form-control my-2 " placeholder="Enter email" />
-                <input type="text" name="first_name" value={credential.first_name} onChange={inputHandler} className="form-control my-2 " placeholder="Enter First Name" />
-                <input type="text" name="last_name" value={credential.last_name} onChange={inputHandler} className="form-control my-2 " placeholder="Enter Last Name" />
-                <input type="password" name="password" value={credential.password} onChange={inputHandler} className="form-control my-2 " placeholder="Enter Password" />
-                <button type="submit" onClick={submitForm} className="btn btn-success my-2">Submit</button>
+               <div className="container col-5">
+               <form noValidate autoComplete="off">
+                   
+                    <TextField name="username" value={credential.username} onChange={inputHandler}  label="Username" className="form-control  my-3 " id="username" placeholder="Enter Username" />
+                    <TextField name="email" value={credential.email} onChange={inputHandler} label="Email" className="form-control my-3 " placeholder="Enter email" />
+                    <TextField name="first_name" value={credential.first_name} onChange={inputHandler} label="First Name" className="form-control my-3 " placeholder="Enter First Name" />
+                    <TextField name="last_name" value={credential.last_name} onChange={inputHandler} label="Last Name" className="form-control my-3 " placeholder="Enter Last Name" />
+                    <TextField type="password" name="password" value={credential.password} onChange={inputHandler} label="Password" className="form-control my-3 " placeholder="Enter Password" />
+                    <Button variant="contained" className="my-3" onClick={submitForm} color="primary">
+                        Submit
+                    </Button>
+                </form>
                </div>
             </div>
         </>

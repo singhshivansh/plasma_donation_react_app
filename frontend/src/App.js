@@ -1,24 +1,24 @@
 import './App.css';
-import {Route, Switch} from 'react-router-dom';
+import Routes from './components/Routes';
+import Navbar from './components/Navbar';
+import { createContext, useReducer } from 'react';
 
-import  Home from './components/Home';
-import Main from './components/Main';
-import About from './components/About';
-import Login from './components/auth/Login';
-import Register from './components/auth/Register'
+import {initialState, reducer} from '../src/reducer/UseReducer';
 
+
+export const UserContext = createContext(); //Context API
 
 function App() {
+
+  const [state, dispatch] = useReducer(reducer, initialState);
+
   return (
     <div className="App">
+      <UserContext.Provider value={{state, dispatch}}>
+        <Navbar/>
+        <Routes />
+      </UserContext.Provider>
       
-      <Switch>
-        <Route path="/" exact><Home/></Route>
-        <Route path="/main"><Main/></Route>
-        <Route path="/about"><About/></Route>
-        <Route path="/login"><Login/></Route>
-        <Route path='/register'><Register /></Route>
-      </Switch>
     </div>
 
   );

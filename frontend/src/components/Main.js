@@ -1,22 +1,34 @@
 import React, {useEffect} from 'react';
-import Navbar from './Navbar';
 import axios from 'axios';
+import {useLocation} from 'react-router-dom';
 
 export const Main = () => {
+    const location = useLocation();
+
+    // console.log(document.cookie);
+    var token = localStorage.getItem('token');
+    // console.log(token);
+
+    const getDonors = () => {
+        axios({
+            method : "GET",
+            url : 'http://127.0.0.1:8000/donors/',
+            headers : {
+                Authorization : `Token ${token}`
+            }
+        })
+        .then((data)=>{
+            console.log(data.data);
+        })
+        .catch(error => console.log(error.response.data))
+    }
 
     useEffect(()=>{
-        axios.get('http://127.0.0.1:8000/')
-        .then((response)=>{
-            console.log(response);
-        })
-        .catch((response)=>{
-            console.log(response);
-        })
+        getDonors();
     })
 
     return (
         <div>
-            <Navbar/>
             <h1>This is Main Page</h1>
         </div>
     )
