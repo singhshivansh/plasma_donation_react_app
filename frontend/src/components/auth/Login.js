@@ -1,7 +1,7 @@
 import React, {useState, useContext} from 'react';
-import { FormControl, TextField, Button } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import {UserContext} from '../../App';
 
 const Login = () => {
@@ -23,7 +23,8 @@ const Login = () => {
         setCredential({...credential,[target_name] : target_value})
     }
 
-    const SendLogin = ()=>{
+    const SendLogin = (e)=>{
+        e.preventDefault();
         axios.post(
             'http://127.0.0.1:8000/auth/',
             credential
@@ -32,6 +33,7 @@ const Login = () => {
             // console.log(res.data.token);
             setToken(res.data.token);
             localStorage.setItem('token', res.data.token);  //saving token
+            console.log(res.data.token);
             dispatch({type:"USER", payload : true})         //setting state true 
             history.push({
                 pathname : '/main',
@@ -45,22 +47,25 @@ const Login = () => {
 
     return (
         <div>
-            <div className="container my-5" >
-                <div>
-                    <h2>Login Form</h2>
-                </div>
-                <div className="container col-4">
-                    <form noValidate autoComplete="off">
-                        <TextField className="col-12 my-3" value={credential.username} onChange={inputHandler} name="username" id="username" label="Username" />
-                        <TextField className="col-12 my-3" value={credential.password} onChange={inputHandler} name="password" type="password" id="password" label="Password" />
-                        <Button variant="contained" onClick={SendLogin} color="primary">
-                        Submit
-                        </Button>
-                    </form>
+            <div className="login_page overflow-y-hidden bg-fixed h-screen bg-gray-100 flex justify-between">
+                <div className="container lg:w-1/3">
+                    <div className="rounded-xl shadow-lg bg-white py-5 mt-5">
+                        <div>
+                            <h2 className="text-3xl font-semibold">Login</h2>
+                        </div>
+                        <div className="container w-80 ">
+                            <form noValidate autoComplete="off">
+                                <TextField className="col-lg-12 col-sm-9 my-3" value={credential.username} onChange={inputHandler} name="username" id="username" label="Username" />
+                                <TextField className="col-lg-12 col-sm-9 my-3" value={credential.password} onChange={inputHandler} name="password" type="password" id="password" label="Password" />
+                                <button className="bg-indigo-600 hover:bg-indigo-800 px-4 mt-2 py-2  text-white font-medium text-sm rounded-md" onClick={SendLogin}>Sign In</button>
+                            </form>
+                        </div>
+                        <div className="pt-3">
+                            <Link className="text-md hover:no-underline font-medium" to='/register'>Dont Have an Account? Sign Up</Link>
+                        </div>
+                    </div>
                 </div>
             </div>
-           
-
         </div>
     )
 }

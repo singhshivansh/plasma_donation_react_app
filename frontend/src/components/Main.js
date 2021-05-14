@@ -28,7 +28,7 @@ export const Main = () => {
     })
 
     return (
-        <div>
+        <div className="bg-green-600">
             <h1>This is Main Page</h1>
         </div>
     )
