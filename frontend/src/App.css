@@ -78,9 +78,10 @@ input {
 
 .suggestions {
   border: 1px solid #999;
+  border-radius: 10px;
   border-top-width: 0;
   list-style: none;
-  max-height: 143px;
+  max-height: 50vh;
   overflow-y: auto;
   background-color: white;
   padding-left: 0;

@@ -20,7 +20,8 @@ const Login = () => {
         const target_name = e.target.name;
         const target_value = e.target.value;
 
-        setCredential({...credential,[target_name] : target_value})
+        setCredential({...credential,[target_name] : target_value});
+
     }
 
     const SendLogin = (e)=>{

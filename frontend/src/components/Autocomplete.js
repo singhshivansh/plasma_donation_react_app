@@ -4,7 +4,8 @@ import SearchIcon from '@material-ui/icons/Search';
 
 class Autocomplete extends Component {
   static propTypes = {
-    suggestions: PropTypes.instanceOf(Array)
+    suggestions: PropTypes.instanceOf(Array),
+    getData: PropTypes.instanceOf(Function)
   };
 
   static defaultProps = {
@@ -82,11 +83,16 @@ class Autocomplete extends Component {
     }
   };
 
+  getData = e => [
+    console.log(this.state.userInput)
+  ]
+
   render() {
     const {
       onChange,
       onClick,
       onKeyDown,
+      getData,
       state: {
         activeSuggestion,
         filteredSuggestions,
@@ -136,7 +142,7 @@ class Autocomplete extends Component {
             value={userInput}
             className="rounded-l-full w-full px-6 text-gray-700 leading-tight focus:outline-none" id="search" type="text" placeholder="Search" />
             <div>
-                <button className="bg-indigo-600 text-white rounded-full p-2"><i><SearchIcon/></i></button>
+                <button className="bg-indigo-600 text-white rounded-full p-2" onClick={getData}><i><SearchIcon/></i></button>
             </div>
         {suggestionsListComponent}
       </Fragment>
