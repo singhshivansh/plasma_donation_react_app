@@ -1,3 +1,5 @@
+
+
 .App {
   text-align: center;
 }
@@ -47,4 +49,59 @@ Link{
 
 .is-active{
   background-color: gray;
+}
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300&display=swap');
+.text_shadow{
+  font-family: 'Kanit', sans-serif;
+}
+
+
+
+body {
+  font-family: 'Kanit', sans-serif;
+
+}
+
+input {
+  padding: 0.5rem;
+  width: 300px;
+}
+
+.no-suggestions {
+  color: #999;
+  padding: 0.5rem;position: absolute;
+  margin-top: 50px;
+  z-index: 100;
+  color: rgba(239, 68, 68, .9);
+  font-weight : 600;
+}
+
+.suggestions {
+  border: 1px solid #999;
+  border-top-width: 0;
+  list-style: none;
+  max-height: 143px;
+  overflow-y: auto;
+  background-color: white;
+  padding-left: 0;
+  width: calc(350px + 1rem);
+  position: absolute;
+  margin-top: 50px;
+  z-index: 100;
+}
+
+.suggestions li {
+  padding: 0.5rem;
+}
+
+.suggestion-active,
+.suggestions li:hover {
+  background-color: rgb(140, 110, 221);
+  color: white;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.suggestions li:not(:last-of-type) {
+  border-bottom: 1px solid #999;
 }
