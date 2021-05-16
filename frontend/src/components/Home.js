@@ -4,6 +4,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import axios from 'axios';
 import Autocomplete from './Autocomplete';
 import MainCard from './MainCard';
+import SubCard from './SubCard';
 
 
 var states = [];
@@ -22,9 +23,17 @@ const Home = () => {
         total_confirmed:'', total_recovered:'', total_deaths : '', daily_confirmed : '', daily_recovered : '' , daily_deaths : ''
     });
     const [searchedResult, setsearchedResult] = useState({
-        active:'', confirmed:'', deaths:'', recovered:'', place:'', last_updated: ''
+        total_confirmed: '', total_death : '', total_recovered:'', total_vaccinated:'',
+        past_7_confirmed: '', past_7_death : '', past_7_recovered:'', past_7_vaccinated:'',
+        past_1_confirmed: '', past_1_death : '', past_1_recovered:'', past_1_vaccinated:'',
+        place:''
     });
-
+    const [incData, setIncData] = useState({
+        total_confirmed: '', total_death : '', total_recovered:'', total_vaccinated:'',
+        past_7_confirmed: '', past_7_death : '', past_7_recovered:'', past_7_vaccinated:'',
+        past_1_confirmed: '', past_1_death : '', past_1_recovered:''
+    })
+ 
     
     const get_covid_data_statewise = ()=> {     //API for covid case - Statewise
         axios({
@@ -73,46 +82,112 @@ const Home = () => {
         .catch(error => console.log(error));
     }
     
-    const get_state_case = ()=>{
+    const get_state_case = ()=>{                //get current data for searched State
         axios({
-            url : 'https://api.covid19india.org/v4/min/timeseries.min.json',
+            url : 'https://api.covid19india.org/v4/min/data.min.json',
             type: 'GET',
         })
-        .then(data=>{
-            console.log(data);
+        .then(data=>{   
+            // var data_ =data.data[searchText.split(', ')[1]]['dates'];   
+            // data_ = Object.values(data_);
+            // console.log(data_[data_.length-1].delta, data_[data_.length-1].delta7, data_[data_.length-1].total);
+            const state_ = searchText.split(', ')[1];
+            console.log(data.data[state_]);
+            const searched_data = data.data[state_];
+            setsearchedResult({
+                total_confirmed: searched_data['total']['confirmed'], total_death : searched_data['total']['deceased'], total_recovered:searched_data['total']['recovered'], total_vaccinated:searched_data['total']['vaccinated'],
+                past_7_confirmed: searched_data['delta7']['confirmed'], past_7_death : searched_data['delta7']['deceased'], past_7_recovered:searched_data['delta7']['recovered'], past_7_vaccinated:searched_data['delta7']['vaccinated'],
+                past_1_confirmed: searched_data['delta']['confirmed'], past_1_death : searched_data['delta']['deceased'], past_1_recovered:searched_data['delta']['recovered'], past_1_vaccinated:searched_data['delta']['vaccinated'],
+                place:searchText
+            });
         })
         .catch(error=>console.log(error));
     }
     
+    const get_state_diff = () => {              //get the difference data for searched State
+        axios({
+            url : 'https://api.covid19india.org/v4/min/timeseries.min.json',
+            type : 'GET'
+        })
+        .then(data => {
+            console.log(data.data);
+            const state_ = searchText.split(', ')[1];
+            var data_ = data.data[state_]['dates'];
+            data_ = Object.values(data_);
+
+            const data_today = data_[data_.length-1];
+            const data_yest = data_[data_.length-2];
+            console.log(data_today, data_yest);
+            setIncData({
+                total_confirmed: data_today['total']['confirmed'] - data_yest['total']['confirmed'], total_death : data_today['total']['deceased'] - data_yest['total']['deceased'], 
+                total_recovered:data_today['total']['recovered'] - data_yest['total']['recovered'], total_vaccinated:data_today['total']['vaccinated'] - data_yest['total']['vaccinated'],
+                
+                past_7_confirmed: data_today['delta7']['confirmed'] - data_yest['delta7']['confirmed'], past_7_death : data_today['delta7']['deceased'] - data_yest['delta7']['deceased'], 
+                past_7_recovered:data_today['delta7']['recovered'] - data_yest['delta7']['recovered'], past_7_vaccinated:data_today['delta7']['vaccinated'] - data_yest['delta7']['vaccinated'],
+                
+                past_1_confirmed: data_today['delta']['confirmed'] - data_yest['delta']['confirmed'], past_1_death : data_today['delta']['deceased'] - data_yest['delta']['deceased'], 
+                past_1_recovered:data_today['delta']['recovered'] - data_yest['delta']['recovered']
+            });
+        })
+        .catch(error => console.log(error));
+    }
+   
+
     const get_covid_data_citywise = ()=>{       //API for covid case - Citywise
         axios({
-            url : 'https://api.covid19india.org/state_district_wise.json',
+            url : 'https://api.covid19india.org/v4/min/data.min.json',
             type : 'GET',
         })
         .then((data)=>{
             var city = data;
             for(var i in city.data){
-                for(var j in data.data[i].districtData){
+                for(var j in data.data[i].districts){
                     if(!cities.includes(`"${j}, ${i}"`) && j != 'Foreign Evacuees'){
                         cities.push(`${j}, ${i}`);
                     }
                 }    
             }
             // console.log(data.data['Uttar Pradesh'], searchText.split(', ')[1]);
-            const state_ = searchText.split(', ')[1];
-            const district_ = searchText.split(', ')[0];
-            console.log(data.data[state_].districtData[district_]);
-            //setting the value of searched City/District
-            const searched_data = data.data[state_].districtData[district_];
-            setsearchedResult({
-                active: searched_data['active'], confirmed : searched_data['confirmed'], deaths : searched_data['deceased'],
-                recovered : searched_data['recovered'], place : searchText,last_updated : inData.last_updated
-            });
+            // const state_ = searchText.split(', ')[1];
+            // const district_ = searchText.split(', ')[0];
+            // // console.log(data.data[state_]['districts'][district_]);
+            // // console.log(data.data[state_].districtData[district_]);
+            // //setting the value of searched City/District
+            // const searched_data = data.data[state_]['districts'][district_];
+            // console.log(searched_data)
+            // setsearchedResult({
+            //     total_confirmed: searched_data['total']['confirmed'], total_death : searched_data['total']['deceased'], total_recovered:searched_data['total']['recovered'], total_vaccinated:searched_data['total']['vaccinated'],
+            //     past_7_confirmed: searched_data['delta7']['confirmed'], past_7_death : searched_data['delta7']['deceased'], past_7_recovered:searched_data['delta7']['recovered'], past_7_vaccinated:searched_data['delta7']['vaccinated'],
+            //     past_1_confirmed: searched_data['delta']['confirmed'], past_1_death : searched_data['delta']['deceased'], past_1_recovered:searched_data['delta']['recovered'], past_1_vaccinated:searched_data['delta']['vaccinated']
+            // });
         })
         .catch(error=>console.log(error));
     }
+
+    const get_city_case = () => {                //get the current data for searched City/District
+        axios({
+            url : 'https://api.covid19india.org/v4/min/data.min.json',
+            type : 'GET'
+        })
+        .then(data=>{
+            // console.log(data.data);
+            const state_ = searchText.split(', ')[1];
+            const district_ = searchText.split(', ')[0];
+            // console.log(data.data[state_]['districts'][district_]);
+            // console.log(data.data[state_].districtData[district_]);
+            //setting the value of searched City/District
+            const searched_data = data.data[state_]['districts'][district_];
+            console.log(searched_data)
+            setsearchedResult({
+                total_confirmed: searched_data['total']['confirmed'], total_death : searched_data['total']['deceased'], total_recovered:searched_data['total']['recovered'], total_vaccinated:searched_data['total']['vaccinated'],
+                past_7_confirmed: searched_data['delta7']['confirmed'], past_7_death : searched_data['delta7']['deceased'], past_7_recovered:searched_data['delta7']['recovered'], past_7_vaccinated:searched_data['delta7']['vaccinated'],
+                past_1_confirmed: searched_data['delta']['confirmed'], past_1_death : searched_data['delta']['deceased'], past_1_recovered:searched_data['delta']['recovered'], past_1_vaccinated:searched_data['delta']['vaccinated'],
+                place:searchText
+            });
+        })
+        .catch(error => console.log(error));
+    }
     
-  
 
     useEffect(()=>{                                 //calling the funtions after page reloads
         get_covid_data_statewise();
@@ -195,12 +270,16 @@ const Home = () => {
     const suubmitHandler = () => {
         const select = document.getElementById("select");
         const sel_value = select.value;
-        if(sel_value == 'state')
-            get_covid_data_statewise();
+        if(sel_value == 'state'){
+            get_state_case();
+            get_state_diff();
+        }
+            // get_covid_data_statewise();
         else if(sel_value == 'city')
-            get_covid_data_citywise();
-        
-        get_state_case();
+            get_city_case();
+
+        // get_covid_data_citywise();
+        console.log(incData);
     }
 
     return(
@@ -209,9 +288,8 @@ const Home = () => {
                 <div>
                     <h5 className="  font-semibold h-1/5 mt-2 container text-3xl text_shadow"><span className="text-red-500 ">Live</span> COVID19 Tracker</h5>
                 </div>
-                <div className="container justify-around flex py-2 my-2 bg-gray-200 rounded-lg">
-                    <div className="flex bg-white  px-2  lg:w-96 md:w-4/5  rounded-xl
-                    ">
+                <div className="container justify-around flex py-2 my-2 bg-gray-200 rounded-xl opacity-90">
+                    <div className="flex bg-white px-2 lg:w-96 md:w-4/5 rounded">
                         <select className="rounded-l-full text-lg font-normal w-full px-6 text-gray-700  focus:outline-none"  onChange={select_change} id="select">
                             <option value="nil" selected>Check Stats by..</option>
                             <option value="state">State</option>
@@ -228,57 +306,55 @@ const Home = () => {
                     </div>
                 </div>
 
-                <div className="container bg-gray-100 h-screen mt-3 lg:flex-wrap md:flex-wrap-reverse rounded-xl opacity-90">
+                <div className="container bg-gray-200 mt-3 lg:flex-wrap md:flex-wrap-reverse rounded-xl mb-3">
                     <div className="w-full lg:flex lg:flex-wrap lg:justify-around md:flex-wrap-reverse">
-                        <div className="lg:w-3/12 md:w-3/5 grid place-content-center mt-4 mx-2 bg-indigo-500 h-24 transform hover:scale-105 rounded-md shadow-2xl flex-3">
-                            <h5 className="font-semibold text-3xl text-white">India</h5>
-                            <h5 className="text-gray-200"><span className="text-gray-800 font-semibold text-lg">Last Updated :</span> {inData.last_updated}</h5>
-                        </div>
-                        
-                        <MainCard heading={'Total Cases'} positive={false} total_value={inData.total_confirmed} difference_value={incrementedData.total_confirmed}/>
 
-                        <MainCard heading={'Total Recovered'} positive={true} total_value={inData.total_recovered} difference_value={incrementedData.total_recovered}/>
-                        
-                        <MainCard heading={'Total Deaths'} positive={false} total_value={inData.total_deaths} difference_value={incrementedData.total_deaths}/>
-                        
-                        <MainCard heading={'Daily Cases'} positive={false} total_value={inData.daily_confirmed} difference_value={incrementedData.daily_confirmed}/>
-                        
-                        <MainCard heading={'Daily Recovered'} positive={true} total_value={inData.daily_recovered} difference_value={incrementedData.daily_recovered}/>
+                        <div className="w-full flex justify-center">
+                            <div className="lg:w-3/12 md:w-3/5 grid place-content-center mt-4 mx-2 transition delay-75 bg-indigo-500 h-24 transform hover:scale-105 rounded-md shadow-2xl flex-3">
+                                <h5 className="font-semibold text-3xl text-white">India</h5>
+                                <h5 className="text-gray-200"><span className="text-gray-800 font-semibold text-lg">Last Updated :</span> {inData.last_updated}</h5>
+                            </div>
+                        </div>
+
+                        <div className="w-full flex flex-wrap mt-3 my-2">                        
+                            <MainCard heading={'Total Cases'} positive={false} total_value={inData.total_confirmed} difference_value={incrementedData.total_confirmed}/>
+                            <MainCard heading={'Total Recovered'} positive={true} total_value={inData.total_recovered} difference_value={incrementedData.total_recovered}/>
+                            <MainCard heading={'Total Deaths'} positive={false} total_value={inData.total_deaths} difference_value={incrementedData.total_deaths}/>
+                            <MainCard heading={'Daily Cases'} positive={false} total_value={inData.daily_confirmed} difference_value={incrementedData.daily_confirmed}/>
+                            <MainCard heading={'Daily Recovered'} positive={true} total_value={inData.daily_recovered} difference_value={incrementedData.daily_recovered}/>
+                            <MainCard heading={'Daily Death'} positive={false} total_value={inData.daily_deaths} difference_value={incrementedData.daily_deaths}/>
+                        </div>
+
                         
                     </div>
                     
-                    <div className="w-full lg:flex lg:flex-wrap lg:justify-around md:flex-wrap-reverse">
-                        <div className="lg:w-3/12 md:w-3/5 grid place-content-center mt-4 mx-2 bg-green-500 h-24 transform hover:scale-105 rounded-md shadow-2xl flex-3">
-                            <h5 className="font-semibold text-3xl text-white">Vaccination Stats</h5>
-                            <h5 className="text-gray-200"><span className="text-gray-800 font-semibold text-lg">Last Updated :</span> {inData.last_updated}</h5>
-                        </div>
-                        
-                        <MainCard heading={'Total Cases'} positive={false} total_value={inData.total_confirmed} difference_value={incrementedData.total_confirmed}/>
+                   
+                    <div className="w-full lg:flex lg:flex-wrap  md:flex-wrap-reverse divide-y divide-red-500 ">
+                        <div className="w-full lg:flex lg:flex-wrap lg:justify-around md:flex-wrap-reverse">
+                            <div className="w-full flex justify-center">
+                                <div className="lg:w-3/12 md:w-3/5 grid place-content-center mt-4 transition delay-75 mx-2 bg-green-400 h-24 transform hover:scale-105 rounded-md shadow-2xl flex-3">
+                                    <h5 className="font-semibold text-3xl text-white">{searchedResult.place}</h5>
+                                    <h5 className="text-gray-100"><span className="text-gray-800 font-semibold text-lg">Last Updated :</span> {inData.last_updated}</h5>
+                                </div>
+                            </div>
+                            <div className="w-full flex flex-wrap mt-3 my-2">                        
+                                <SubCard heading={'Total'} confirmed={searchedResult.total_confirmed} recovered ={searchedResult.total_recovered}
+                                    deaths={searchedResult.total_death} vaccinated={searchedResult.total_vaccinated}
+                                    delta_conf={incData.total_confirmed} delta_rec={incData.total_recovered} delta_death={incData.total_death} delta_vacc={incData.total_vaccinated}
+                                    />
 
-                        <MainCard heading={'Total Recovered'} positive={true} total_value={inData.total_recovered} difference_value={incrementedData.total_recovered}/>
-                        
-                        <MainCard heading={'Total Deaths'} positive={false} total_value={inData.total_deaths} difference_value={incrementedData.total_deaths}/>
-                        
-                        <MainCard heading={'Daily Cases'} positive={false} total_value={inData.daily_confirmed} difference_value={incrementedData.daily_confirmed}/>
-                        
-                        <MainCard heading={'Daily Recovered'} positive={true} total_value={inData.daily_recovered} difference_value={incrementedData.daily_recovered}/>
-                        
-                    </div>
-                    <div className="w-full lg:flex lg:flex-wrap lg:justify-around md:flex-wrap-reverse">
-                        <div className="lg:w-3/12 md:w-3/5 grid place-content-center mt-4 mx-2 bg-green-500 h-24 transform hover:scale-105 rounded-md shadow-2xl flex-3">
-                            <h5 className="font-semibold text-3xl text-white">{searchedResult.place}</h5>
-                            <h5 className="text-gray-200"><span className="text-gray-800 font-semibold text-lg">Last Updated :</span> {searchedResult.last_updated}</h5>
-                        </div>
-                        
-                        <MainCard heading={'Active'} positive={false} total_value={searchedResult.active} difference_value={incrementedData.total_confirmed}/>
+                                <SubCard heading={'Past 7 Days'} confirmed={searchedResult.past_7_confirmed} recovered ={searchedResult.past_7_recovered}
+                                    deaths={searchedResult.past_7_death} vaccinated={searchedResult.past_7_vaccinated}
+                                    delta_conf={incData.past_7_confirmed} delta_rec={incData.past_7_recovered} delta_death={incData.past_7_death} delta_vacc={incData.past_7_vaccinated}      
+                                />
 
-                        <MainCard heading={'Confirmed'} positive={false} total_value={searchedResult.confirmed} difference_value={incrementedData.total_recovered}/>
-                        
-                        <MainCard heading={'Recovered'} positive={true} total_value={searchedResult.recovered} difference_value={incrementedData.total_deaths}/>
-                        
-                        <MainCard heading={'Deaths'} positive={false} total_value={searchedResult.deaths} difference_value={incrementedData.daily_confirmed}/>
-                        
-                        
+                                <SubCard heading={'Past Day'} confirmed={searchedResult.past_1_confirmed} recovered ={searchedResult.past_1_recovered} 
+                                    deaths={searchedResult.past_1_death} vaccinated={searchedResult.past_1_vaccinated}
+                                    delta_conf={incData.past_1_confirmed} delta_rec={incData.past_1_recovered} delta_death={incData.past_1_death }
+                                
+                                />
+                            </div>
+                        </div>                 
                     </div>
                 </div>
                 
