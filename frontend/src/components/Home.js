@@ -11,17 +11,18 @@ var cities = [];
 
 const Home = () => {
 
-    //Declaring useStates for searching
+    //Declaring useStates
     const [searchText, setsearchText] = useState('');
     const [searchResult, setsearchResult] = useState([]);
+    const [showSuggestion, setshowSuggestion] = useState(false);
     const [inData, setinData] = useState({
         total_confirmed:'', total_recovered:'', total_deaths:'', last_updated:'', daily_confirmed : '', daily_recovered : '', daily_deaths : '',
     });
     const[incrementedData, setincrementedData] = useState({
         total_confirmed:'', total_recovered:'', total_deaths : '', daily_confirmed : '', daily_recovered : '' , daily_deaths : ''
-    })
+    });
+    const [searchedResult, setsearchedResult] = useState('');
 
-    
     
     const get_covid_data_statewise = ()=> {     //API for covid case - Statewise
         axios({
@@ -58,6 +59,8 @@ const Home = () => {
                 daily_deaths    : today_stat.dailydeceased - yest_stat.dailydeceased,
             })
             console.log(data.data);
+
+            // console.log(state_list.filter(obj => obj.statecode == `${searchText.split(', ')[1]}`))
         })
         .catch(error => console.log(error));
     }
@@ -75,35 +78,34 @@ const Home = () => {
                     if(!cities.includes(`"${j}"`) && j != 'Foreign Evacuees'){
                         cities.push(j);
                     }
-                }
-                    
+                }    
             }
+            console.log(data.data);
         })
         .catch(error=>console.log(error));
     }
     
   
 
-    useEffect(()=>{
+    useEffect(()=>{                                 //calling the funtions after page reloads
         get_covid_data_statewise();
         get_covid_data_citywise();
         console.log(incrementedData);
     }, [])
     
-   
+    
 
-    const select_change = (e) => {
+    const select_change = (e) => {                  //Setting the value of Input Placeholder
         const select = document.getElementById("select");
         const sel_value = select.value;
+
         const search_target = document.getElementById("search");
 
         if(sel_value == 'state'){
             search_target.placeholder = "Search State";
-            setsearchResult(states);
         }
         else if(sel_value == 'city'){
             search_target.placeholder = "Search City";
-            setsearchResult(cities);
         }
         else{
             search_target.placeholder = "Please Select first!";
@@ -111,17 +113,61 @@ const Home = () => {
         }
     }
 
-    const changeHandler = (e) => {
+    const changeHandler = (e) => {                  //Filtering the array according to the entered value
+        const select = document.getElementById("select");
+        const sel_value = select.value;
 
         setsearchText(e.target.value);
-        console.log(searchText);
+        // console.log(searchText);
+        var arr =[];
+        if(sel_value == 'state')
+            arr =  states.filter(obj => obj.includes(searchText));
+        else if(sel_value == 'city')
+            arr =  cities.filter(obj => obj.includes(searchText));
 
-        setsearchResult(states.filter(obj => obj.includes(searchText)));
+        setsearchResult(arr);
 
+        // console.log(searchResult);
+    }
 
-        console.log(searchResult);
+    const setValue = (e)=>{                         //Set the value on click in suggestions
+        const search = document.getElementById("search");
+        console.log(e.target.innerText);
+        // search.value = e.target.innerText;
+        setsearchText(e.target.innerText);
+        setshowSuggestion(false);
     }
     
+    const SuggestionList = (suggestions) => {       //Suggestion List
+        if(showSuggestion){
+            if(suggestions.length > 0){
+                return(
+                    <ul className="suggestions">
+                        {
+                            suggestions.map((suggestion, index) =>{
+                                return(
+                                    <li onClick={setValue}>{suggestion}</li>
+                                )
+                            })
+                        }
+                    </ul>
+                )
+            }
+        }
+        else{
+            <div class="no-suggestions  w-3/12">    
+                <ul className="flex justify-center italic ">
+                <li>cITY <span className="text-gray-700 font-medium ">Not Found!</span></li>
+                </ul>
+            </div>
+        }
+    }
+
+    const suubmitHandler = () => {
+        console.log(searchText);
+        // get_covid_data_statewise();
+        get_covid_data_citywise();
+    }
 
     return(
         <>
@@ -139,11 +185,12 @@ const Home = () => {
                         </select>
                     </div>
                     <div className="flex bg-white py-1 px-2  lg:w-96 md:w-4/5  rounded-3xl">
-                    <input type="text" onChange={changeHandler} value={searchText}
+                        <input type="text" onChange={changeHandler} onClick={()=>setshowSuggestion(true)} value={searchText}
                         className="rounded-l-full w-full px-6 text-gray-700 leading-tight focus:outline-none" id="search" type="text" placeholder="Search" />
                         <div>
-                            <button className="bg-indigo-600 text-white rounded-full p-2" ><i><SearchIcon/></i></button>
+                            <button className="bg-indigo-600 text-white rounded-full p-2"  onClick={suubmitHandler}><i><SearchIcon/></i></button>
                         </div>
+                        {SuggestionList(searchResult)}
                     </div>
                 </div>
 
