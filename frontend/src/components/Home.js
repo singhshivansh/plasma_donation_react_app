@@ -21,7 +21,9 @@ const Home = () => {
     const[incrementedData, setincrementedData] = useState({
         total_confirmed:'', total_recovered:'', total_deaths : '', daily_confirmed : '', daily_recovered : '' , daily_deaths : ''
     });
-    const [searchedResult, setsearchedResult] = useState('');
+    const [searchedResult, setsearchedResult] = useState({
+        active:'', confirmed:'', deaths:'', recovered:'', place:'', last_updated: ''
+    });
 
     
     const get_covid_data_statewise = ()=> {     //API for covid case - Statewise
@@ -58,13 +60,29 @@ const Home = () => {
                 daily_recovered : today_stat.dailyrecovered - yest_stat.dailyrecovered,
                 daily_deaths    : today_stat.dailydeceased - yest_stat.dailydeceased,
             })
-            console.log(data.data);
+            // console.log(data.data);
 
-            // console.log(state_list.filter(obj => obj.statecode == `${searchText.split(', ')[1]}`))
+            //setting data for searched state
+            const searched_data = state_list.filter(obj => obj.statecode == `${searchText.split(', ')[1]}`);
+            console.log(data.data);
+            setsearchedResult({
+                active:searched_data[0]['active'], confirmed:searched_data[0]['confirmed'], deaths:searched_data[0]['deaths'],
+                recovered:searched_data[0]['recovered'], place : searchText, last_updated : inData.last_updated
+            })
         })
         .catch(error => console.log(error));
     }
     
+    const get_state_case = ()=>{
+        axios({
+            url : 'https://api.covid19india.org/v4/min/timeseries.min.json',
+            type: 'GET',
+        })
+        .then(data=>{
+            console.log(data);
+        })
+        .catch(error=>console.log(error));
+    }
     
     const get_covid_data_citywise = ()=>{       //API for covid case - Citywise
         axios({
@@ -75,12 +93,21 @@ const Home = () => {
             var city = data;
             for(var i in city.data){
                 for(var j in data.data[i].districtData){
-                    if(!cities.includes(`"${j}"`) && j != 'Foreign Evacuees'){
-                        cities.push(j);
+                    if(!cities.includes(`"${j}, ${i}"`) && j != 'Foreign Evacuees'){
+                        cities.push(`${j}, ${i}`);
                     }
                 }    
             }
-            console.log(data.data);
+            // console.log(data.data['Uttar Pradesh'], searchText.split(', ')[1]);
+            const state_ = searchText.split(', ')[1];
+            const district_ = searchText.split(', ')[0];
+            console.log(data.data[state_].districtData[district_]);
+            //setting the value of searched City/District
+            const searched_data = data.data[state_].districtData[district_];
+            setsearchedResult({
+                active: searched_data['active'], confirmed : searched_data['confirmed'], deaths : searched_data['deceased'],
+                recovered : searched_data['recovered'], place : searchText,last_updated : inData.last_updated
+            });
         })
         .catch(error=>console.log(error));
     }
@@ -90,7 +117,7 @@ const Home = () => {
     useEffect(()=>{                                 //calling the funtions after page reloads
         get_covid_data_statewise();
         get_covid_data_citywise();
-        console.log(incrementedData);
+        // console.log(incrementedData);
     }, [])
     
     
@@ -103,12 +130,15 @@ const Home = () => {
 
         if(sel_value == 'state'){
             search_target.placeholder = "Search State";
+            setsearchText('');
         }
         else if(sel_value == 'city'){
             search_target.placeholder = "Search City";
+            setsearchText('');
         }
         else{
             search_target.placeholder = "Please Select first!";
+            setsearchText('');
             setsearchResult([]);
         }
     }
@@ -121,9 +151,9 @@ const Home = () => {
         // console.log(searchText);
         var arr =[];
         if(sel_value == 'state')
-            arr =  states.filter(obj => obj.includes(searchText));
+            arr =  states.filter(obj => obj.toLowerCase().includes(searchText.toLowerCase()));
         else if(sel_value == 'city')
-            arr =  cities.filter(obj => obj.includes(searchText));
+            arr =  cities.filter(obj => obj.toLowerCase().includes(searchText.toLowerCase()));
 
         setsearchResult(arr);
 
@@ -131,8 +161,7 @@ const Home = () => {
     }
 
     const setValue = (e)=>{                         //Set the value on click in suggestions
-        const search = document.getElementById("search");
-        console.log(e.target.innerText);
+        // console.log(e.target.innerText);
         // search.value = e.target.innerText;
         setsearchText(e.target.innerText);
         setshowSuggestion(false);
@@ -164,9 +193,14 @@ const Home = () => {
     }
 
     const suubmitHandler = () => {
-        console.log(searchText);
-        // get_covid_data_statewise();
-        get_covid_data_citywise();
+        const select = document.getElementById("select");
+        const sel_value = select.value;
+        if(sel_value == 'state')
+            get_covid_data_statewise();
+        else if(sel_value == 'city')
+            get_covid_data_citywise();
+        
+        get_state_case();
     }
 
     return(
@@ -232,19 +266,18 @@ const Home = () => {
                     </div>
                     <div className="w-full lg:flex lg:flex-wrap lg:justify-around md:flex-wrap-reverse">
                         <div className="lg:w-3/12 md:w-3/5 grid place-content-center mt-4 mx-2 bg-green-500 h-24 transform hover:scale-105 rounded-md shadow-2xl flex-3">
-                            <h5 className="font-semibold text-3xl text-white">Vaccination Stats</h5>
-                            <h5 className="text-gray-200"><span className="text-gray-800 font-semibold text-lg">Last Updated :</span> {inData.last_updated}</h5>
+                            <h5 className="font-semibold text-3xl text-white">{searchedResult.place}</h5>
+                            <h5 className="text-gray-200"><span className="text-gray-800 font-semibold text-lg">Last Updated :</span> {searchedResult.last_updated}</h5>
                         </div>
                         
-                        <MainCard heading={'Total Cases'} positive={false} total_value={inData.total_confirmed} difference_value={incrementedData.total_confirmed}/>
+                        <MainCard heading={'Active'} positive={false} total_value={searchedResult.active} difference_value={incrementedData.total_confirmed}/>
 
-                        <MainCard heading={'Total Recovered'} positive={true} total_value={inData.total_recovered} difference_value={incrementedData.total_recovered}/>
+                        <MainCard heading={'Confirmed'} positive={false} total_value={searchedResult.confirmed} difference_value={incrementedData.total_recovered}/>
                         
-                        <MainCard heading={'Total Deaths'} positive={false} total_value={inData.total_deaths} difference_value={incrementedData.total_deaths}/>
+                        <MainCard heading={'Recovered'} positive={true} total_value={searchedResult.recovered} difference_value={incrementedData.total_deaths}/>
                         
-                        <MainCard heading={'Daily Cases'} positive={false} total_value={inData.daily_confirmed} difference_value={incrementedData.daily_confirmed}/>
+                        <MainCard heading={'Deaths'} positive={false} total_value={searchedResult.deaths} difference_value={incrementedData.daily_confirmed}/>
                         
-                        <MainCard heading={'Daily Recovered'} positive={true} total_value={inData.daily_recovered} difference_value={incrementedData.daily_recovered}/>
                         
                     </div>
                 </div>
