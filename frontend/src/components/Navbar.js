@@ -62,15 +62,17 @@ function Nav() {
                 </div>
                 <div className="hidden md:block">
                     <div className="ml-10 flex items-baseline space-x-4">
-                    <Link 
+                      <Link 
                         className="hover:no-underline text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-1 rounded-md text-sm font-medium"
                         to = '/'>Home</Link>
 
-                    <Link className="hover:no-underline text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-1 rounded-md text-sm font-medium"
+                      <Link className="hover:no-underline text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-1 rounded-md text-sm font-medium"
                         to = '/main'>Main</Link>
 
-                        <Link className="hover:no-underline text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-1 rounded-md text-sm font-medium"
+                      <Link className="hover:no-underline text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-1 rounded-md text-sm font-medium"
                         to = '/about'>About</Link>
+                      <Link  className="hover:no-underline bg-green-600 text-gray-100 hover:bg-gray-700 hover:text-white px-3 py-1 rounded-md text-sm font-medium"
+                      to = "/plasma_form" >Donate Plasma</Link>
                     </div>
                 </div>
             </div>

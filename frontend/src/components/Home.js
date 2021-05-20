@@ -5,7 +5,7 @@ import axios from 'axios';
 import Autocomplete from './Autocomplete';
 import MainCard from './MainCard';
 import SubCard from './SubCard';
-
+import {motion} from 'framer-motion';
 
 var states = [];
 var cities = [];
@@ -52,22 +52,22 @@ const Home = () => {
 
             // console.log(today_stat, yest_stat);
             setinData({
-                    total_confirmed : today_stat.totalconfirmed,    //setting the daily COVID Cases
-                    total_recovered : today_stat.totalrecovered, total_deaths: today_stat.totaldeceased,
-                    last_updated    : `${today_stat.date}, ${in_data.lastupdatedtime.split(' ')[1]}`,
-                    daily_confirmed : today_stat.dailyconfirmed,
-                    daily_recovered : today_stat.dailyrecovered,
-                    daily_deaths    : today_stat.dailydeceased,
+                    total_confirmed : today_stat.totalconfirmed || '',    //setting the daily COVID Cases
+                    total_recovered : today_stat.totalrecovered, total_deaths: today_stat.totaldeceased || '',
+                    last_updated    : `${today_stat.date}, ${in_data.lastupdatedtime.split(' ')[1]}` || '',
+                    daily_confirmed : today_stat.dailyconfirmed || '',
+                    daily_recovered : today_stat.dailyrecovered || '',
+                    daily_deaths    : today_stat.dailydeceased || '',
                 });
             
             setincrementedData({
-                total_confirmed : today_stat.totalconfirmed - yest_stat.totalconfirmed,
-                total_recovered : today_stat.totalrecovered - yest_stat.totalrecovered,
-                total_deaths    : today_stat.totaldeceased - yest_stat.totaldeceased,
+                total_confirmed : today_stat.totalconfirmed - yest_stat.totalconfirmed || '',
+                total_recovered : today_stat.totalrecovered - yest_stat.totalrecovered || '',
+                total_deaths    : today_stat.totaldeceased - yest_stat.totaldeceased || '',
 
-                daily_confirmed : today_stat.dailyconfirmed - yest_stat.dailyconfirmed,
-                daily_recovered : today_stat.dailyrecovered - yest_stat.dailyrecovered,
-                daily_deaths    : today_stat.dailydeceased - yest_stat.dailydeceased,
+                daily_confirmed : today_stat.dailyconfirmed - yest_stat.dailyconfirmed || '',
+                daily_recovered : today_stat.dailyrecovered - yest_stat.dailyrecovered || '',
+                daily_deaths    : today_stat.dailydeceased - yest_stat.dailydeceased || '',
             })
             // console.log(data.data);
 
@@ -95,10 +95,10 @@ const Home = () => {
             console.log(data.data[state_]);
             const searched_data = data.data[state_];
             setsearchedResult({
-                total_confirmed: searched_data['total']['confirmed'], total_death : searched_data['total']['deceased'], total_recovered:searched_data['total']['recovered'], total_vaccinated:searched_data['total']['vaccinated'],
-                past_7_confirmed: searched_data['delta7']['confirmed'], past_7_death : searched_data['delta7']['deceased'], past_7_recovered:searched_data['delta7']['recovered'], past_7_vaccinated:searched_data['delta7']['vaccinated'],
-                past_1_confirmed: searched_data['delta']['confirmed'], past_1_death : searched_data['delta']['deceased'], past_1_recovered:searched_data['delta']['recovered'], past_1_vaccinated:searched_data['delta']['vaccinated'],
-                place:searchText
+                total_confirmed:( searched_data['total']['confirmed'])   || '', total_death :( searched_data['total']['deceased'])  || '', total_recovered:(searched_data['total']['recovered']) || '', total_vaccinated:(searched_data['total']['vaccinated']) || '',
+                past_7_confirmed: (searched_data['delta7']['confirmed'])   || '', past_7_death : (searched_data['delta7']['deceased'])  || '', past_7_recovered:(searched_data['delta7']['recovered']) || '', past_7_vaccinated:(searched_data['delta7']['vaccinated']) || '',
+                past_1_confirmed: (searched_data['delta']['confirmed'])   || '', past_1_death : (searched_data['delta']['deceased'])  || '', past_1_recovered:(searched_data['delta']['recovered']) || '', past_1_vaccinated:(searched_data['delta']['vaccinated']) || '',
+                place:searchText || ''
             });
         })
         .catch(error=>console.log(error));
@@ -119,14 +119,14 @@ const Home = () => {
             const data_yest = data_[data_.length-2];
             console.log(data_today, data_yest);
             setIncData({
-                total_confirmed: data_today['total']['confirmed'] - data_yest['total']['confirmed'], total_death : data_today['total']['deceased'] - data_yest['total']['deceased'], 
-                total_recovered:data_today['total']['recovered'] - data_yest['total']['recovered'], total_vaccinated:data_today['total']['vaccinated'] - data_yest['total']['vaccinated'],
+                total_confirmed: (data_today['total']['confirmed'] - data_yest['total']['confirmed']) || '', total_death : (data_today['total']['deceased'] - data_yest['total']['deceased']) || '', 
+                total_recovered:(data_today['total']['recovered'] - data_yest['total']['recovered']) || '', total_vaccinated:(data_today['total']['vaccinated'] - data_yest['total']['vaccinated']) || '',
                 
-                past_7_confirmed: data_today['delta7']['confirmed'] - data_yest['delta7']['confirmed'], past_7_death : data_today['delta7']['deceased'] - data_yest['delta7']['deceased'], 
-                past_7_recovered:data_today['delta7']['recovered'] - data_yest['delta7']['recovered'], past_7_vaccinated:data_today['delta7']['vaccinated'] - data_yest['delta7']['vaccinated'],
+                past_7_confirmed: (data_today['delta7']['confirmed'] - data_yest['delta7']['confirmed']) || '', past_7_death :( data_today['delta7']['deceased'] - data_yest['delta7']['deceased']) || '', 
+                past_7_recovered:(data_today['delta7']['recovered'] - data_yest['delta7']['recovered']) || '', past_7_vaccinated:(data_today['delta7']['vaccinated'] - data_yest['delta7']['vaccinated']) || '',
                 
-                past_1_confirmed: data_today['delta']['confirmed'] - data_yest['delta']['confirmed'], past_1_death : data_today['delta']['deceased'] - data_yest['delta']['deceased'], 
-                past_1_recovered:data_today['delta']['recovered'] - data_yest['delta']['recovered']
+                past_1_confirmed: (data_today['delta']['confirmed'] - data_yest['delta']['confirmed']) || '', past_1_death : (data_today['delta']['deceased'] - data_yest['delta']['deceased']) || '', 
+                past_1_recovered:(data_today['delta']['recovered'] - data_yest['delta']['recovered']) || ''
             });
         })
         .catch(error => console.log(error));
@@ -179,9 +179,9 @@ const Home = () => {
             const searched_data = data.data[state_]['districts'][district_];
             console.log(searched_data)
             setsearchedResult({
-                total_confirmed: searched_data['total']['confirmed'], total_death : searched_data['total']['deceased'], total_recovered:searched_data['total']['recovered'], total_vaccinated:searched_data['total']['vaccinated'],
-                past_7_confirmed: searched_data['delta7']['confirmed'], past_7_death : searched_data['delta7']['deceased'], past_7_recovered:searched_data['delta7']['recovered'], past_7_vaccinated:searched_data['delta7']['vaccinated'],
-                past_1_confirmed: searched_data['delta']['confirmed'], past_1_death : searched_data['delta']['deceased'], past_1_recovered:searched_data['delta']['recovered'], past_1_vaccinated:searched_data['delta']['vaccinated'],
+                total_confirmed: (searched_data['total']['confirmed']) || '', total_death : (searched_data['total']['deceased']) || '', total_recovered:(searched_data['total']['recovered']) || '', total_vaccinated:(searched_data['total']['vaccinated']) || '',
+                past_7_confirmed: (searched_data['delta7']['confirmed']) || '', past_7_death : (searched_data['delta7']['deceased']) || '', past_7_recovered:(searched_data['delta7']['recovered']) || '', past_7_vaccinated:(searched_data['delta7']['vaccinated']) || '',
+                past_1_confirmed: (searched_data['delta']['confirmed']) || '', past_1_death : (searched_data['delta']['deceased']) || '', past_1_recovered:(searched_data['delta']['recovered']) || '', past_1_vaccinated:(searched_data['delta']['vaccinated']) || '',
                 place:searchText
             });
         })
@@ -282,6 +282,25 @@ const Home = () => {
         console.log(incData);
     }
 
+    const motion_variant_right={
+        hidden:{
+            x: '-30vh',
+            opacity: 0,
+            scale : 0.5
+        },
+        visible:{
+            x: 0,
+            opacity: 1,
+            scale : 1
+        }
+    }
+
+    const hidden_animation = {
+        hidden: {opacity : 0, y : '30vh', scale : 1.4},
+        visible : {opacity : 1, y: 0, scale : 1}
+    }
+
+
     return(
         <>
             <div className="h-screen login_page bg-blend-darken	">
@@ -309,21 +328,21 @@ const Home = () => {
                 <div className="container bg-gray-200 mt-3 lg:flex-wrap md:flex-wrap-reverse rounded-xl mb-3">
                     <div className="w-full lg:flex lg:flex-wrap lg:justify-around md:flex-wrap-reverse">
 
-                        <div className="w-full flex justify-center">
+                        <motion.div initial="hidden" animate="visible" variants={hidden_animation} className="w-full flex justify-center">
                             <div className="lg:w-3/12 md:w-3/5 grid place-content-center mt-4 mx-2 transition delay-75 bg-indigo-500 h-24 transform hover:scale-105 rounded-md shadow-2xl flex-3">
                                 <h5 className="font-semibold text-3xl text-white">India</h5>
                                 <h5 className="text-gray-200"><span className="text-gray-800 font-semibold text-lg">Last Updated :</span> {inData.last_updated}</h5>
                             </div>
-                        </div>
+                        </motion.div>
 
-                        <div className="w-full flex flex-wrap mt-3 my-2">                        
+                        <motion.div initial="hidden" animate="visible" variants={motion_variant_right} className="w-full flex flex-wrap mt-3 my-2">                        
                             <MainCard heading={'Total Cases'} positive={false} total_value={inData.total_confirmed} difference_value={incrementedData.total_confirmed}/>
                             <MainCard heading={'Total Recovered'} positive={true} total_value={inData.total_recovered} difference_value={incrementedData.total_recovered}/>
                             <MainCard heading={'Total Deaths'} positive={false} total_value={inData.total_deaths} difference_value={incrementedData.total_deaths}/>
                             <MainCard heading={'Daily Cases'} positive={false} total_value={inData.daily_confirmed} difference_value={incrementedData.daily_confirmed}/>
                             <MainCard heading={'Daily Recovered'} positive={true} total_value={inData.daily_recovered} difference_value={incrementedData.daily_recovered}/>
                             <MainCard heading={'Daily Death'} positive={false} total_value={inData.daily_deaths} difference_value={incrementedData.daily_deaths}/>
-                        </div>
+                        </motion.div>
 
                         
                     </div>

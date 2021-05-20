@@ -1,5 +1,6 @@
 import React from 'react';
 import MainCard from './MainCard';
+import {motion} from 'framer-motion';
 
 const SubCard = (props) => {
     const Check_value = (value)=>{
@@ -36,17 +37,29 @@ const SubCard = (props) => {
 
 
     const VaccinatedSec = (value) =>{
-        console.log(value); 
-        if(value.value.vaccinated != undefined)
+        // console.log(value); 
+        if(value.value.vaccinated != undefined || value.value.vaccinated == '')
         return (
             <MainCard heading={'Vaccinated'} positive={true}  total_value = {value.value.vaccinated} difference_value={value.value.delta_vacc}/>
         )
         return null;
     }
-    console.log(props);
+    // console.log(props);
+
+    const motion_variant = {
+        hidden : {
+            x : '30vh',
+            opacity : 0
+        },
+        visible : {
+            x : 0,
+            opacity : 1
+        }
+    }
+
     return (
         
-        <div className="w-full lg:flex lg:flex-wrap lg:justify-around md:flex-wrap-reverse">
+        <motion.div initial="hidden" animate="visible" variants={motion_variant} className="w-full lg:flex lg:flex-wrap lg:justify-around md:flex-wrap-reverse">
             <div className="lg:w-2/12 md:w-3/5 grid place-content-center bg-purple-500 mx-2 my-2  transform hover:scale-105 rounded-md shadow-2xl flex-3">
                 <h5 className="font-semibold text-2xl text-white">{props.heading}</h5>
             </div>
@@ -56,7 +69,7 @@ const SubCard = (props) => {
             <VaccinatedSec value={props} />
             <MainCard heading={'Deaths'} positive={false} total_value={props.deaths} difference_value={props.delta_death} />
             
-        </div>
+        </motion.div>
 
     )
 }

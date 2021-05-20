@@ -6,6 +6,7 @@ import Main from './Main';
 import About from './About';
 import Login from './auth/Login';
 import Register from './auth/Register'
+import PlasmaDonationForm from './PlasmaDonationForm';
 
 const Routes = () => {
     return (
@@ -16,6 +17,7 @@ const Routes = () => {
                 <Route path="/about"><About/></Route>
                 <Route path="/login"><Login/></Route>
                 <Route path='/register'><Register /></Route>
+                <Route path='/plasma_form'><PlasmaDonationForm /></Route>
             </Switch>
             
         </div>
