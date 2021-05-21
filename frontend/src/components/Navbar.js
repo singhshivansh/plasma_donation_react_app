@@ -3,12 +3,28 @@ import { Transition } from "@headlessui/react";
 import {Link, useHistory} from 'react-router-dom';
 import MyModal from "./Modal";
 import {UserContext} from '../App';
+import axios from "axios";
 
 
 function Nav() {
   const [isOpen, setIsOpen] = useState(false);
   const {state, dispatch} = useContext(UserContext);
   const history = useHistory();
+
+  const get_curr_user = () =>{
+    const token = localStorage.getItem('token');
+    axios({
+      type : 'GET',
+      url : 'http://127.0.0.1:8000/get_current_user/',
+      headers : {
+        Authorization : `Token ${token}`
+      }
+    })
+    .then(success => {
+      sessionStorage.setItem('user', JSON.stringify(success.data))
+    })
+    .catch(error => console.log(error))
+  }
 
     console.log(localStorage.getItem('token'));
     if(localStorage.getItem('token')){
@@ -21,16 +37,24 @@ function Nav() {
   const logout = ()=>{
     if(localStorage.getItem('token')){
       localStorage.removeItem('token');
+      sessionStorage.removeItem('user');
       dispatch({type:"USER", payload:false});
       alert("Successfully Logout!");
       history.push('/main');
     }
   }
-
   const RenderMenu = () => {
+    
     if(state){
+      get_curr_user();
+      var user_name = '';
+      if(sessionStorage.getItem('user')){
+        user_name = JSON.parse(sessionStorage.getItem('user')).first_name;
+      }
+
       return(
         <div className="ml-10 flex items-baseline space-x-4">
+          <h5 className="text-white capitalize">{user_name}</h5>
           <button onClick={logout}
           className="hover:no-underline bg-gray-100 text-black hover:bg-gray-300 hover:text-black px-3 py-1 rounded-md text-sm font-medium"
           >Logout</button>
@@ -40,6 +64,8 @@ function Nav() {
     else{
       return(
             <div className="ml-10 flex items-baseline space-x-4">
+              <Link  className="hover:no-underline bg-green-600 text-gray-100 hover:bg-gray-700 hover:text-white px-3 py-1 rounded-md text-sm font-medium"
+                      to = "/plasma_form" >Donate Plasma</Link>
               <Link 
                 className="hover:no-underline bg-gray-100 text-black hover:bg-gray-300 hover:text-black px-3 py-1 rounded-md text-sm font-medium"
                 to = '/login'>Login</Link>
@@ -71,8 +97,7 @@ function Nav() {
 
                       <Link className="hover:no-underline text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-1 rounded-md text-sm font-medium"
                         to = '/about'>About</Link>
-                      <Link  className="hover:no-underline bg-green-600 text-gray-100 hover:bg-gray-700 hover:text-white px-3 py-1 rounded-md text-sm font-medium"
-                      to = "/plasma_form" >Donate Plasma</Link>
+                      
                     </div>
                 </div>
             </div>

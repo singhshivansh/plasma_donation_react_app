@@ -32,7 +32,7 @@ const Login = () => {
             credential
         )
         .then(res => {
-            // console.log(res.data.token);
+            console.log(res.data);
             setToken(res.data.token);
             localStorage.setItem('token', res.data.token);  //saving token
             console.log(res.data.token);
