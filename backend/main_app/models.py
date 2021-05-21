@@ -4,15 +4,16 @@ from django.contrib.auth.models import User
 import serpy
 # Create your models here.
 class PlasmaBank(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
-    name = models.CharField(max_length=20)
-    city = models.CharField(max_length=20)
+    user    = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    name    = models.CharField(max_length=20)
+    city    = models.CharField(max_length=20)
+    state   = models.CharField(max_length=20, null=True, blank=True)
 
 class Hospital(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=20)
-    city = models.CharField(max_length=20)
-
+    user    = models.OneToOneField(User, on_delete=models.CASCADE)
+    name    = models.CharField(max_length=20)
+    city    = models.CharField(max_length=20)
+    state   = models.CharField(max_length=20, null=True, blank=True)
 
 class Donor(models.Model):
     name = models.CharField(max_length=30)
