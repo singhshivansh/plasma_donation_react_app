@@ -17,10 +17,10 @@ class UserSerializer(serializers.ModelSerializer):
         Token.objects.create(user=user)
         return user
 
-class DonorSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
-    name = serializers.CharField(max_length=30)
-    city = serializers.CharField(max_length=30)
+class DonorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Donor
+        fields = '__all__'
 
 class PlasmaBankSerializer(serializers.ModelSerializer):
     class Meta:

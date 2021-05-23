@@ -16,8 +16,18 @@ class Hospital(models.Model):
     state   = models.CharField(max_length=20, null=True, blank=True)
 
 class Donor(models.Model):
-    name = models.CharField(max_length=30)
-    city = models.CharField(max_length=50)
+    first_name  = models.CharField(max_length=30, null=True, blank=True)
+    last_name   = models.CharField(max_length = 30, null=True, blank=True)
+    mobile      = models.IntegerField(default=0)
+    email       = models.CharField(max_length = 30, null=True, blank= True)
+    age         = models.IntegerField(default=0)
+    gender      = models.CharField(max_length=10, null=True, blank=True)
+    blood_group = models.CharField(max_length=10, null=True, blank=True)
+    weight      = models.IntegerField(default=0)
+    height      = models.IntegerField(default=0)
+    city        = models.CharField(max_length=50, null=True, blank=True)
+    state       = models.CharField(max_length=30, null=True, blank=True)
+
 
 class PlasmaBankSerializer(serpy.Serializer):
     name = serpy.StrField()
