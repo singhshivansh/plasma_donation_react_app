@@ -33,7 +33,7 @@ const Home = () => {
         past_7_confirmed: '', past_7_death : '', past_7_recovered:'', past_7_vaccinated:'',
         past_1_confirmed: '', past_1_death : '', past_1_recovered:''
     })
- 
+    const [searched, setSearched] = useState(false);
     
     const get_covid_data_statewise = ()=> {     //API for covid case - Statewise
         axios({
@@ -268,6 +268,7 @@ const Home = () => {
     }
 
     const suubmitHandler = () => {
+        setSearched(true);
         const select = document.getElementById("select");
         const sel_value = select.value;
         if(sel_value == 'state'){
@@ -300,6 +301,41 @@ const Home = () => {
         visible : {opacity : 1, y: 0, scale : 1}
     }
 
+    const SearchedComponent = () =>{
+        if(searched){
+            return(
+                <div className="w-full lg:flex lg:flex-wrap  md:flex-wrap-reverse divide-y divide-red-500 ">
+                    <div className="w-full lg:flex lg:flex-wrap lg:justify-around md:flex-wrap-reverse">
+                        <div className="w-full flex justify-center">
+                            <div className="lg:w-3/12 md:w-3/5 grid place-content-center mt-4 transition delay-75 mx-2 bg-green-400 h-24 transform hover:scale-105 rounded-md shadow-2xl flex-3">
+                                <h5 className="font-semibold text-3xl text-white">{searchedResult.place}</h5>
+                                <h5 className="text-gray-100"><span className="text-gray-800 font-semibold text-lg">Last Updated :</span> {inData.last_updated}</h5>
+                            </div>
+                        </div>
+                        <div className="w-full flex flex-wrap mt-3 my-2">                        
+                            <SubCard heading={'Total'} confirmed={searchedResult.total_confirmed} recovered ={searchedResult.total_recovered}
+                                deaths={searchedResult.total_death} vaccinated={searchedResult.total_vaccinated}
+                                delta_conf={incData.total_confirmed} delta_rec={incData.total_recovered} delta_death={incData.total_death} delta_vacc={incData.total_vaccinated}
+                                />
+    
+                            <SubCard heading={'Past 7 Days'} confirmed={searchedResult.past_7_confirmed} recovered ={searchedResult.past_7_recovered}
+                                deaths={searchedResult.past_7_death} vaccinated={searchedResult.past_7_vaccinated}
+                                delta_conf={incData.past_7_confirmed} delta_rec={incData.past_7_recovered} delta_death={incData.past_7_death} delta_vacc={incData.past_7_vaccinated}      
+                            />
+    
+                            <SubCard heading={'Past Day'} confirmed={searchedResult.past_1_confirmed} recovered ={searchedResult.past_1_recovered} 
+                                deaths={searchedResult.past_1_death} vaccinated={searchedResult.past_1_vaccinated}
+                                delta_conf={incData.past_1_confirmed} delta_rec={incData.past_1_recovered} delta_death={incData.past_1_death }
+                            
+                            />
+                        </div>
+                    </div>                 
+                </div>
+            )
+        }
+        return null;
+    }
+
 
     return(
         <>
@@ -325,7 +361,7 @@ const Home = () => {
                     </div>
                 </div>
 
-                <div className="container bg-gray-200 mt-3 lg:flex-wrap md:flex-wrap-reverse rounded-xl mb-3">
+                <div className="container bg-gray-200 mt-3 lg:flex-wrap md:flex-wrap-reverse rounded-xl mb-3 pb-5">
                     <div className="w-full lg:flex lg:flex-wrap lg:justify-around md:flex-wrap-reverse">
 
                         <motion.div initial="hidden" animate="visible" variants={hidden_animation} className="w-full flex justify-center">
@@ -347,34 +383,7 @@ const Home = () => {
                         
                     </div>
                     
-                   
-                    <div className="w-full lg:flex lg:flex-wrap  md:flex-wrap-reverse divide-y divide-red-500 ">
-                        <div className="w-full lg:flex lg:flex-wrap lg:justify-around md:flex-wrap-reverse">
-                            <div className="w-full flex justify-center">
-                                <div className="lg:w-3/12 md:w-3/5 grid place-content-center mt-4 transition delay-75 mx-2 bg-green-400 h-24 transform hover:scale-105 rounded-md shadow-2xl flex-3">
-                                    <h5 className="font-semibold text-3xl text-white">{searchedResult.place}</h5>
-                                    <h5 className="text-gray-100"><span className="text-gray-800 font-semibold text-lg">Last Updated :</span> {inData.last_updated}</h5>
-                                </div>
-                            </div>
-                            <div className="w-full flex flex-wrap mt-3 my-2">                        
-                                <SubCard heading={'Total'} confirmed={searchedResult.total_confirmed} recovered ={searchedResult.total_recovered}
-                                    deaths={searchedResult.total_death} vaccinated={searchedResult.total_vaccinated}
-                                    delta_conf={incData.total_confirmed} delta_rec={incData.total_recovered} delta_death={incData.total_death} delta_vacc={incData.total_vaccinated}
-                                    />
-
-                                <SubCard heading={'Past 7 Days'} confirmed={searchedResult.past_7_confirmed} recovered ={searchedResult.past_7_recovered}
-                                    deaths={searchedResult.past_7_death} vaccinated={searchedResult.past_7_vaccinated}
-                                    delta_conf={incData.past_7_confirmed} delta_rec={incData.past_7_recovered} delta_death={incData.past_7_death} delta_vacc={incData.past_7_vaccinated}      
-                                />
-
-                                <SubCard heading={'Past Day'} confirmed={searchedResult.past_1_confirmed} recovered ={searchedResult.past_1_recovered} 
-                                    deaths={searchedResult.past_1_death} vaccinated={searchedResult.past_1_vaccinated}
-                                    delta_conf={incData.past_1_confirmed} delta_rec={incData.past_1_recovered} delta_death={incData.past_1_death }
-                                
-                                />
-                            </div>
-                        </div>                 
-                    </div>
+                   <SearchedComponent/>
                 </div>
                 
 
