@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import {Link, useHistory} from 'react-router-dom';
 import {motion} from 'framer-motion';
-
+import { states } from '../../data/states';
 
 const motion_right = {
     hidden : {
@@ -97,8 +97,13 @@ function Register() {
                                         <select className="bg-gray-200 rounded-md focus:outline-none focus:ring-2 border-1 w-full focus:bg-white focus:ring-indigo-500 py-2 text-gray-400"
                                             name="state" id="state" onChange={inputHandler} value={credential.state}>
                                             <option value="" selected>Select State</option>
-                                            <option value="Andhra Pradesh">Andhra Pradesh</option>
-                                            <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                            {
+                                                states.map(state=>{
+                                                    return(
+                                                        <option value={state}>{state}</option>
+                                                    )
+                                                })
+                                            }
                                         </select>
                                     </div>
 

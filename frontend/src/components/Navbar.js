@@ -8,7 +8,8 @@ import axios from "axios";
 
 function Nav() {
   const [isOpen, setIsOpen] = useState(false);
-  const {state, dispatch} = useContext(UserContext);
+  const {state, dispatch}   = useContext(UserContext);
+  const [user, setUser]     = useState('');
   const history = useHistory();
 
   const get_curr_user = () =>{
@@ -25,6 +26,8 @@ function Nav() {
     })
     .catch(error => console.log(error))
   }
+
+  
 
     console.log(localStorage.getItem('token'));
     if(localStorage.getItem('token')){
@@ -47,14 +50,14 @@ function Nav() {
     
     if(state){
       get_curr_user();
-      var user_name = '';
       if(sessionStorage.getItem('user')){
-        user_name = JSON.parse(sessionStorage.getItem('user')).first_name;
+        var user_ = JSON.parse(sessionStorage.getItem('user'));
+        setUser(user_.first_name);
       }
 
       return(
         <div className="ml-10 flex items-baseline space-x-4">
-          <h5 className="text-white capitalize">{user_name}</h5>
+          <h5 className="text-white capitalize">{user}</h5>
           <button onClick={logout}
           className="hover:no-underline bg-gray-100 text-black hover:bg-gray-300 hover:text-black px-3 py-1 rounded-md text-sm font-medium"
           >Logout</button>

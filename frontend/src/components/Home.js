@@ -17,21 +17,21 @@ const Home = () => {
     const [searchResult, setsearchResult] = useState([]);
     const [showSuggestion, setshowSuggestion] = useState(false);
     const [inData, setinData] = useState({
-        total_confirmed:'', total_recovered:'', total_deaths:'', last_updated:'', daily_confirmed : '', daily_recovered : '', daily_deaths : '',
+        total_confirmed:'No Data Available', total_recovered:'No Data Available', total_deaths:'No Data Available', last_updated:'No Data Available', daily_confirmed : 'No Data Available', daily_recovered : 'No Data Available', daily_deaths : 'No Data Available',
     });
     const[incrementedData, setincrementedData] = useState({
-        total_confirmed:'', total_recovered:'', total_deaths : '', daily_confirmed : '', daily_recovered : '' , daily_deaths : ''
+        total_confirmed:'No Data Available', total_recovered:'No Data Available', total_deaths : 'No Data Available', daily_confirmed : 'No Data Available', daily_recovered : 'No Data Available' , daily_deaths : 'No Data Available'
     });
     const [searchedResult, setsearchedResult] = useState({
-        total_confirmed: '', total_death : '', total_recovered:'', total_vaccinated:'',
-        past_7_confirmed: '', past_7_death : '', past_7_recovered:'', past_7_vaccinated:'',
-        past_1_confirmed: '', past_1_death : '', past_1_recovered:'', past_1_vaccinated:'',
-        place:''
+        total_confirmed: 'No Data Available', total_death : 'No Data Available', total_recovered:'No Data Available', total_vaccinated:'No Data Available',
+        past_7_confirmed: 'No Data Available', past_7_death : 'No Data Available', past_7_recovered:'No Data Available', past_7_vaccinated:'No Data Available',
+        past_1_confirmed: 'No Data Available', past_1_death : 'No Data Available', past_1_recovered:'No Data Available', past_1_vaccinated:'No Data Available',
+        place:'No Data Available'
     });
     const [incData, setIncData] = useState({
-        total_confirmed: '', total_death : '', total_recovered:'', total_vaccinated:'',
-        past_7_confirmed: '', past_7_death : '', past_7_recovered:'', past_7_vaccinated:'',
-        past_1_confirmed: '', past_1_death : '', past_1_recovered:''
+        total_confirmed: 'No Data Available', total_death : 'No Data Available', total_recovered:'No Data Available', total_vaccinated:'No Data Available',
+        past_7_confirmed: 'No Data Available', past_7_death : 'No Data Available', past_7_recovered:'No Data Available', past_7_vaccinated:'No Data Available',
+        past_1_confirmed: 'No Data Available', past_1_death : 'No Data Available', past_1_recovered:'No Data Available'
     })
     const [searched, setSearched] = useState(false);
     
@@ -287,7 +287,7 @@ const Home = () => {
         hidden:{
             x: '-30vh',
             opacity: 0,
-            scale : 0.5
+            scale : 0
         },
         visible:{
             x: 0,
@@ -297,7 +297,7 @@ const Home = () => {
     }
 
     const hidden_animation = {
-        hidden: {opacity : 0, y : '30vh', scale : 1.4},
+        hidden: {opacity : 0, y : '30vh', scale : 2},
         visible : {opacity : 1, y: 0, scale : 1}
     }
 
