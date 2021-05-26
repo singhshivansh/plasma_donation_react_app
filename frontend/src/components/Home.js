@@ -246,7 +246,7 @@ const Home = () => {
         if(showSuggestion){
             if(suggestions.length > 0){
                 return(
-                    <ul className="suggestions">
+                    <ul className="suggestions z-30">
                         {
                             suggestions.map((suggestion, index) =>{
                                 return(
@@ -364,21 +364,21 @@ const Home = () => {
                 <div className="container bg-gray-200 mt-3 lg:flex-wrap md:flex-wrap-reverse rounded-xl mb-3 pb-5">
                     <div className="w-full lg:flex lg:flex-wrap lg:justify-around md:flex-wrap-reverse">
 
-                        <motion.div initial="hidden" animate="visible" variants={hidden_animation} className="w-full flex justify-center">
+                        <div className="w-full flex justify-center">
                             <div className="lg:w-3/12 md:w-3/5 grid place-content-center mt-4 mx-2 transition delay-75 bg-indigo-500 h-24 transform hover:scale-105 rounded-md shadow-2xl flex-3">
                                 <h5 className="font-semibold text-3xl text-white">India</h5>
                                 <h5 className="text-gray-200"><span className="text-gray-800 font-semibold text-lg">Last Updated :</span> {inData.last_updated}</h5>
                             </div>
-                        </motion.div>
+                        </div>
 
-                        <motion.div initial="hidden" animate="visible" variants={motion_variant_right} className="w-full flex flex-wrap mt-3 my-2">                        
+                        <div  className="w-full flex flex-wrap mt-3 my-2">                        
                             <MainCard heading={'Total Cases'} positive={false} total_value={inData.total_confirmed} difference_value={incrementedData.total_confirmed}/>
                             <MainCard heading={'Total Recovered'} positive={true} total_value={inData.total_recovered} difference_value={incrementedData.total_recovered}/>
                             <MainCard heading={'Total Deaths'} positive={false} total_value={inData.total_deaths} difference_value={incrementedData.total_deaths}/>
                             <MainCard heading={'Daily Cases'} positive={false} total_value={inData.daily_confirmed} difference_value={incrementedData.daily_confirmed}/>
                             <MainCard heading={'Daily Recovered'} positive={true} total_value={inData.daily_recovered} difference_value={incrementedData.daily_recovered}/>
                             <MainCard heading={'Daily Death'} positive={false} total_value={inData.daily_deaths} difference_value={incrementedData.daily_deaths}/>
-                        </motion.div>
+                        </div>
 
                         
                     </div>
