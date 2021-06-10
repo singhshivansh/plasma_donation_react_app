@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {motion} from 'framer-motion';
 import { states } from '../data/states';
+import axios from 'axios';
 
 const top_motion = {
     hidden : {y : -200, opacity : 0, scale : 0},
@@ -21,7 +22,16 @@ const PlasmaDonationForm = () => {
     const inputHandler = (e) => {
         setCredential({...credential,[e.target.name] : e.target.value});    //setting the state value using spread operator
     }
-    
+
+    const submitHandler = e =>{
+        e.preventDefault();
+        console.log(credential);
+
+        axios.post('http://127.0.0.1:8000/add_donor/', credential)
+        .then((data)=>console.log(data))
+        .catch(data=>console.log(data))
+    }
+
     return (
         <div className="bg-gray-200 h-full pb-5 login_page">
             <motion.div initial="hidden" animate="visible" variants={top_motion}>
@@ -123,7 +133,7 @@ const PlasmaDonationForm = () => {
                             </select>                      
                         </div>
                     </div>
-                    <button className="px-3 py-2 bg-indigo-600 mb-3 text-white rounded-lg hover:bg-indigo-800">Submit</button>
+                    <button onClick={submitHandler} className="px-3 py-2 bg-indigo-600 mb-3 text-white rounded-lg hover:bg-indigo-800">Submit</button>
                 </motion.div>
             </form>
         </div>

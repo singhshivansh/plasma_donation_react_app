@@ -83,6 +83,11 @@ class Get_User(APIView):
         return Response(UserSerializer(request.user).data)
 
 @csrf_exempt
+def add_donor(request):
+    if request.method == 'POST':
+        return JsonResponse({"status" : "POST"})
+
+@csrf_exempt
 def register(request):
     msg = json.loads(request.body)
     user_ins = User.objects.create(username=msg['username'], first_name=msg['name'], password=msg['password'], email=msg['email'])
