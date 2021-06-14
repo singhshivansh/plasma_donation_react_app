@@ -85,7 +85,23 @@ class Get_User(APIView):
 @csrf_exempt
 def add_donor(request):
     if request.method == 'POST':
-        return JsonResponse({"status" : "POST"})
+        try:
+            msg = json.loads(request.body)
+            Donor.objects.create(
+                first_name  = msg['first_name'],
+                last_name   = msg['last_name'],
+                mobile      = msg['mobile'],
+                blood_group = msg['blood_group'],
+                email       = msg['email'],
+                gender      = msg['gender'],
+                weight      = msg['weight'],
+                height      = msg['height'],
+                city        = msg['city'],
+                state       = msg['state']
+            )
+            return JsonResponse({"status" : "success"})
+        except:
+            return JsonResponse({"status" : "error"})
 
 @csrf_exempt
 def register(request):

@@ -28,6 +28,8 @@ class Donor(models.Model):
     city        = models.CharField(max_length=50, null=True, blank=True)
     state       = models.CharField(max_length=30, null=True, blank=True)
 
+    def __str__(self):
+        return self.first_name
 
 class PlasmaBankSerializer(serpy.Serializer):
     name = serpy.StrField()
