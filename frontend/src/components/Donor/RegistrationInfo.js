@@ -1,9 +1,9 @@
 import React from 'react'
 
-export const RegistrationInfo = () => {
+export const RegistrationInfo = (props) => {
     return (
         <div>
-            <h5>YouR ID number : </h5>            
+            <h5>YouR ID number : {props} </h5>            
         </div>
     )
 }

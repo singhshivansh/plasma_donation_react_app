@@ -87,7 +87,7 @@ def add_donor(request):
     if request.method == 'POST':
         try:
             msg = json.loads(request.body)
-            Donor.objects.create(
+            donor_ins = Donor.objects.create(
                 first_name  = msg['first_name'],
                 last_name   = msg['last_name'],
                 mobile      = msg['mobile'],
@@ -99,7 +99,8 @@ def add_donor(request):
                 city        = msg['city'],
                 state       = msg['state']
             )
-            return JsonResponse({"status" : "success"})
+
+            return JsonResponse({"status" : "success", "donor_id" : donor_ins.id})
         except:
             return JsonResponse({"status" : "error"})
 

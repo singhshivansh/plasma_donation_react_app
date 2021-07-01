@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {motion} from 'framer-motion';
 import { states } from '../data/states';
 import axios from 'axios';
+import { useHistory } from 'react-router';
 
 const top_motion = {
     hidden : {y : -200, opacity : 0, scale : 0},
@@ -19,6 +20,8 @@ const PlasmaDonationForm = () => {
         weight: "", height : "", city : "", state : ""
     })
 
+    const history = useHistory();
+
     const inputHandler = (e) => {
         setCredential({...credential,[e.target.name] : e.target.value});    //setting the state value using spread operator
     }
@@ -28,7 +31,12 @@ const PlasmaDonationForm = () => {
         console.log(credential);
 
         axios.post('http://127.0.0.1:8000/add_donor/', credential)
-        .then((data)=>console.log(data))
+        .then((data)=>{
+            console.log(data.data);
+            if(data.data.status == "success"){
+                history.push({pathname: '/donor_info/{data.data.id}'})
+            }
+        })
         .catch(data=>console.log(data))
     }
 

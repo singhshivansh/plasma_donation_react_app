@@ -19,7 +19,7 @@ const Routes = () => {
                 <Route path="/login"><Login/></Route>
                 <Route path='/register'><Register /></Route>
                 <Route path='/plasma_form'><PlasmaDonationForm /></Route>
-                <Route path="/donor_info"><RegistrationInfo/></Route>
+                <Route path="/donor_info/:id"><RegistrationInfo/></Route>
             </Switch>
             
         </div>
