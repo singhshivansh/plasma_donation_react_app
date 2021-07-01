@@ -34,7 +34,8 @@ const PlasmaDonationForm = () => {
         .then((data)=>{
             console.log(data.data);
             if(data.data.status == "success"){
-                history.push({pathname: '/donor_info/{data.data.id}'})
+                history.push({pathname: `/donor_info/${data.data.donor_id}`})
+                // window.location.href = '/donor_info/{}'
             }
         })
         .catch(data=>console.log(data))

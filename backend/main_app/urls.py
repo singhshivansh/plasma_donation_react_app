@@ -18,4 +18,5 @@ urlpatterns = [
     path('get_current_user/', views.Get_User.as_view()),
     path('add_donor/', views.add_donor),
     #APIs
+    path('get_plasma_bank/<int:donor_id>', views.get_plasma_bank, name="get_plasma_bank")
 ]

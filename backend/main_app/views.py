@@ -12,6 +12,7 @@ import json
 # importing from rest framework
 from rest_framework import viewsets
 from rest_framework.response import Response
+from rest_framework.serializers import Serializer
 from rest_framework.views import APIView
 from rest_framework import permissions, authentication
 
@@ -23,6 +24,8 @@ from .models import PlasmaBank, Hospital, Donor
 from .serializers import UserSerializer, DonorSerializer, PlasmaBankSerializer, HospitalSerializer
 
 from django.views.decorators.csrf import csrf_exempt
+
+from django.core import serializers
 # Create your views here.
 
 
@@ -101,7 +104,8 @@ def add_donor(request):
             )
 
             return JsonResponse({"status" : "success", "donor_id" : donor_ins.id})
-        except:
+        except Exception as e:
+            print(e)
             return JsonResponse({"status" : "error"})
 
 @csrf_exempt
@@ -129,3 +133,10 @@ def register(request):
     msg = {"data" : msg}
     return JsonResponse(msg)
 
+def get_plasma_bank(request, donor_id):
+    print(donor_id)
+    donor = Donor.objects.get(id = donor_id)
+    plasma_banks = PlasmaBank.objects.filter(city__icontains = donor.city)
+    serialized_data = serializers.serialize('json', plasma_banks)
+    print(serialized_data)
+    return JsonResponse({"status" : serialized_data})
